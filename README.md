@@ -28,9 +28,11 @@ Your `sites.csv` should be formatted as follows:
 
 | IP | Port |
 | :--- | :--- |
-| 10.201.115.114 | 443 |
+| 10.201.115.111 | 443 |
+| 10.201.115.112 |  |
+| 10.201.115.113 | 5061 |
 | 10.201.115.115 | 7443 |
-* Note: If a port isnt provided, 443 is assumeed.
+* Note: If a port isnt provided, 443 is assumeed. If 5061 is provided TCP Stream handshake is used for SIP.
 ---
 
 ## 🛠️ Usage
