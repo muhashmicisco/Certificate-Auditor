@@ -31,8 +31,8 @@ Your `sites.csv` should be formatted as follows:
 | 10.201.115.111 | 443 |
 | 10.201.115.112 |  |
 | 10.201.115.113 | 5061 |
-| 10.201.115.115 | 7443 |
-* Note: If a port isnt provided, 443 is assumeed. If 5061 is provided TCP Stream handshake is used for SIP.
+| 10.201.115.115 | 8443 |
+* Note: If a port isnt provided, 443 is assumeed. If 8443/5061 is provided TCP Stream handshake is used for SIP for MRA or Expressway.
 ---
 
 ## 🛠️ Usage
