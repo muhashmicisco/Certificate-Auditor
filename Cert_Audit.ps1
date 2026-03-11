@@ -24,7 +24,7 @@ $results = Import-Csv $inputFile | ForEach-Object {
         $cert = $null
         
         # Use Raw Socket for SIP (5061) and Expressway (8443/7443)
-        if ($port -match "5061|8443|7443") {
+        if ($port -match "5061|5062|8443|7443") {
             $tcpClient = New-Object System.Net.Sockets.TcpClient
             $connect = $tcpClient.BeginConnect($ip, [int]$port, $null, $null)
             $wait = $connect.AsyncWaitHandle.WaitOne(7000, $false)
@@ -104,3 +104,4 @@ $results = Import-Csv $inputFile | ForEach-Object {
 $results | Out-GridView -Title "Final Consolidated Certificate Audit"
 $results | Export-Csv -Path $outputFile -NoTypeInformation -Encoding UTF8
 Write-Host "`n[DONE] Results saved to: $outputFile" -ForegroundColor Green
+
