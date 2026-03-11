@@ -6,7 +6,7 @@ A robust PowerShell utility designed to audit SSL/TLS certificates across large 
 
 ## 🚀 Features
 
-* **Legacy Protocol Support:** Explicitly handles `SSLv3`, `TLS 1.0`, `TLS 1.1`, and `TLS 1.2`.
+* **Legacy Protocol Support:** Explicitly handles `SSLv3`, `TLS 1.0`, `TLS 1.1`, `TLS 1.2` and `TLS 1.3`.
 * **Dynamic Port Scanning:** Reads target IPs and unique ports (e.g., 443, 7443, 8443) directly from a CSV.
 * **Handshake Bypass:** Implements a custom `TrustAllCertsPolicy` to extract metadata from expired, self-signed, or untrusted certificates without failing.
 * **Deep Metadata Extraction:**
