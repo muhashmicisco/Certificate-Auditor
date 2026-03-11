@@ -4,7 +4,7 @@ if (-not ([System.Management.Automation.PSTypeName]'TrustAllCertsPolicy').Type) 
     Add-Type -TypeDefinition "using System.Net; using System.Security.Cryptography.X509Certificates; public class TrustAllCertsPolicy : ICertificatePolicy { public bool CheckValidationResult(ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem) { return true; } }"
 }
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-[Net.ServicePointManager]::SecurityProtocol = "Ssl3, Tls, Tls11, Tls12"
+[Net.ServicePointManager]::SecurityProtocol = "Ssl3, Tls, Tls11, Tls12, Tls13"
 
 # 2. Configuration
 $inputFile  = "sites.csv"    
@@ -85,5 +85,6 @@ $results = Import-Csv $inputFile | ForEach-Object {
 # 4. Final Outputs
 $results | Out-GridView -Title "Certificate Audit: Multi-Port Results"
 $results | Export-Csv -Path $outputFile -NoTypeInformation -Encoding UTF8
+
 
 Write-Host "`n[DONE] Results saved to: $outputFile" -ForegroundColor Green
