@@ -1,0 +1,7 @@
+﻿"IPAddress","Port","Status","CommonName","Issuer","Expiration","DaysLeft","SANs","EKU"
+"10.201.115.113","443","Self-Signed","L=Chicago, S=IL, CN=muhashmi-cucm-1, OU=CX, O=Cisco, C=US","L=Chicago, S=IL, CN=muhashmi-cucm-1, OU=CX, O=Cisco, C=US","3/13/2028 11:56:28 AM","733","None","Server Authentication (1.3.6.1.5.5.7.3.1), Client Authentication (1.3.6.1.5.5.7.3.2)"
+"10.201.115.114","7443","CA Signed","muhashmi-expc1.muhashmi.com","Muhashmi CA","4/22/2028 5:00:19 PM","774","DNS Name=muhashmi-expc1.muhashmi.com; ","None Found"
+"10.201.115.115","7443","CA Signed","muhashmi-expe1.muhashmi.com","Muhashmi CA","4/22/2028 4:50:27 PM","774","DNS Name=muhashmi-expe1.muhashmi.com; DNS Name=muhashmi-expe1.muhashmi.com; DNS Name=muhashmi.com; DNS Name=muhashmi-webrtc.muhashmi.com; DNS Name=cluster.cms.com; DNS Name=collab-edge.muhashmi.com; ","None Found"
+"10.201.115.118","443","CA Signed","Unknown/Empty","Muhashmi CA","10/8/2028 10:32:22 AM","942","None","None Found"
+"10.201.115.119","443","CA Signed","*.muhashmi.com","Muhashmi CA","4/7/2025 2:57:45 PM","-336","DNS Name=*.muhashmi.com; DNS Name=muhashmi.com; IP Address=10.201.115.119; DNS Name=muhashmi-cms1.muhashmi.com; ","None Found"
+"10.88.145.219","443","Self-Signed","DIff-MHRoomKit.cisco.com","DIff-MHRoomKit.cisco.com","2/5/2027 1:42:29 PM","331","DNS Name=DIff-MHRoomKit.cisco.com; ","Server Authentication (1.3.6.1.5.5.7.3.1)"
