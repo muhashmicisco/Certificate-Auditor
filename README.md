@@ -62,6 +62,9 @@ The script uses the legacy `[System.Net.HttpWebRequest]` engine rather than the 
 | **SANs** | Subject Alternative Names (DNS/IP). |
 | **EKU** | Enhanced Key Usage (Server Auth, etc). |
 
+Sample output window:
+<img width="1918" height="283" alt="image" src="https://github.com/user-attachments/assets/06bde363-4625-4ecf-8dc9-2eca7caab6c2" />
+
 ---
 
 ## Logic Flow
