@@ -38,7 +38,7 @@ Your `sites.csv` should be formatted as follows:
 1.  Place your target list in `sites.csv`.
 2.  Run the script:
     ```powershell
-    .\Cert_Auditor.ps1
+    .\Cert_Audit.ps1
     ```
 3.  View results in the pop-up window or open `Cert_Audit_Results.csv`.
 
