@@ -66,3 +66,6 @@ The script uses the legacy `[System.Net.HttpWebRequest]` engine rather than the 
 
 ## 🛡️ License
 This project is provided "as-is" for internal auditing and administrative purposes.
+
+<img width="1002" height="2864" alt="image" src="https://github.com/user-attachments/assets/26d927af-3dc0-48b7-9842-6b3be160c5b1" />
+
