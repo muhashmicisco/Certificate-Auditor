@@ -20,7 +20,7 @@ A robust PowerShell utility designed to audit SSL/TLS certificates across large 
 
 ## 📋 Prerequisites
 
-* **PowerShell 5.1 or higher**
+* **PowerShell 5.1+**
 * **Input File:** A file named `sites.csv` must exist in the same directory as the script.
 
 ### CSV Format Requirement
