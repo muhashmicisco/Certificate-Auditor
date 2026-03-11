@@ -4,7 +4,6 @@ if (-not ([System.Management.Automation.PSTypeName]'TrustAllCertsPolicy').Type) 
     Add-Type -TypeDefinition "using System.Net; using System.Security.Cryptography.X509Certificates; public class TrustAllCertsPolicy : ICertificatePolicy { public bool CheckValidationResult(ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem) { return true; } }"
 }
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-# Added Tls13 for modern compatibility while keeping older ones for legacy
 $Protocols = [Net.SecurityProtocolType]"Ssl3, Tls, Tls11, Tls12, Tls13"
 [System.Net.ServicePointManager]::SecurityProtocol = $Protocols
 
@@ -24,17 +23,21 @@ $results = Import-Csv $inputFile | ForEach-Object {
     try {
         $cert = $null
         
-        if ($port -eq "5061") {
-            # --- SIP/TLS LOGIC (Hardened Handshake) ---
+        # Use Raw Socket for SIP (5061) and Expressway (8443/7443)
+        if ($port -match "5061|8443|7443") {
             $tcpClient = New-Object System.Net.Sockets.TcpClient
             $connect = $tcpClient.BeginConnect($ip, [int]$port, $null, $null)
-            if (-not $connect.AsyncWaitHandle.WaitOne(5000, $false)) { throw "Connection Timeout (TCP 5061)" }
-            $tcpClient.EndConnect($connect)
+            $wait = $connect.AsyncWaitHandle.WaitOne(7000, $false)
             
-            # User-defined callback to ignore all chain errors
+            if (-not $wait) { 
+                $tcpClient.Close()
+                throw "TCP Connection Timeout - Device may be blocking this port." 
+            }
+            
+            $tcpClient.EndConnect($connect)
             $sslStream = New-Object System.Net.Security.SslStream($tcpClient.GetStream(), $false, ({ return $true }))
             
-            # THE FIX: Explicitly pass protocols and ignore revocation checks
+            # Explicitly pass protocols and ignore revocation checks to avoid SSPI errors
             $sslStream.AuthenticateAsClient($ip, $null, $Protocols, $false)
             
             if ($sslStream.RemoteCertificate) {
@@ -43,36 +46,36 @@ $results = Import-Csv $inputFile | ForEach-Object {
             $tcpClient.Close()
         }
         else {
-            # --- WEB/SSL LOGIC ---
+            # Standard Web Request logic
             $webRequest = [System.Net.HttpWebRequest]::Create("https://$ip`:$port")
-            $webRequest.Timeout = 5000
+            $webRequest.Timeout = 7000
             $webRequest.AllowAutoRedirect = $false
             $response = $webRequest.GetResponse()
             $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($webRequest.ServicePoint.Certificate)
             $response.Close()
         }
 
-        if ($null -eq $cert) { throw "Could not retrieve certificate" }
+        if ($null -eq $cert) { throw "Could not retrieve certificate metadata." }
 
-        # --- PARSING LOGIC (Remains the same for consistency) ---
+        # --- DATA PARSING (The "Null-Safe" Way) ---
         $ekuExt = $cert.Extensions | Where-Object { $_.Oid.Value -eq "2.5.29.37" }
         $ekuFormatted = if ($ekuExt) { $ekuExt.Format($false) } else { "None Found" }
 
         $sanExt = $cert.Extensions | Where-Object { $_.Oid.Value -eq "2.5.29.17" }
         $sanFormatted = if ($sanExt) { $sanExt.Format($true) -replace "`r`n", "; " } else { "None" }
 
+        # Subject Parsing
         $cn = "Unknown/Empty"
         if ($cert.Subject) {
             $cnRaw = $cert.Subject.Split(',').Where({$_ -like "CN=*" }) | Select-Object -First 1
-            if ($cnRaw) { $cn = ([string]$cnRaw).Replace("CN=", "").Trim() }
-            else { $cn = $cert.Subject }
+            $cn = if ($cnRaw) { ([string]$cnRaw).Replace("CN=", "").Trim() } else { $cert.Subject }
         }
 
+        # Issuer Parsing
         $issuer = "Unknown/Empty"
         if ($cert.Issuer) {
             $issuerRaw = $cert.Issuer.Split(',').Where({$_ -like "CN=*" }) | Select-Object -First 1
-            if ($issuerRaw) { $issuer = ([string]$issuerRaw).Replace("CN=", "").Trim() }
-            else { $issuer = $cert.Issuer }
+            $issuer = if ($issuerRaw) { ([string]$issuerRaw).Replace("CN=", "").Trim() } else { $cert.Issuer }
         }
 
         $status = if ($cn -eq $issuer -and $cn -ne "Unknown/Empty") { "Self-Signed" } else { "CA Signed" }
@@ -91,12 +94,13 @@ $results = Import-Csv $inputFile | ForEach-Object {
     }
     catch {
         [PSCustomObject]@{
-            IPAddress    = $ip; Port = $port; Status = "ERROR"; CommonName = "FAILED"; Issuer = "N/A"; Expiration = $null; DaysLeft = $null; SANs = "N/A"; EKU = "Error: $($_.Exception.Message)"
+            IPAddress    = $ip; Port = $port; Status = "ERROR"; CommonName = "FAILED"; Issuer = "N/A"
+            Expiration   = $null; DaysLeft = $null; SANs = "N/A"; EKU = "Error: $($_.Exception.Message)"
         }
     }
 }
 
 # 4. Final Outputs
-$results | Out-GridView -Title "Certificate Audit: Multi-Port & SIP Results"
+$results | Out-GridView -Title "Final Consolidated Certificate Audit"
 $results | Export-Csv -Path $outputFile -NoTypeInformation -Encoding UTF8
 Write-Host "`n[DONE] Results saved to: $outputFile" -ForegroundColor Green
