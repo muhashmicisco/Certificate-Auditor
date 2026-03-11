@@ -30,8 +30,7 @@ Your `sites.csv` should be formatted as follows:
 | :--- | :--- |
 | 10.201.115.114 | 443 |
 | 10.201.115.115 | 7443 |
-
-Note: If a port isnt provided, 443 is assumeed.
+* Note: If a port isnt provided, 443 is assumeed.
 ---
 
 ## 🛠️ Usage
