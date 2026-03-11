@@ -1,6 +1,6 @@
 # Legacy SSL/TLS Certificate Auditor
 
-A robust PowerShell utility designed to audit SSL/TLS certificates across large internal networks. This script is specifically hardened to handle **legacy hardware** (PDUs, AV gear, UPS systems, and older appliances) that may require deprecated protocols or have malformed certificate fields.
+A robust PowerShell utility designed to audit SSL/TLS certificates across large internal networks. This script is specifically hardened to handle new and legacy Web Servers that may require deprecated protocols or have malformed certificate fields.
 
 ---
 
